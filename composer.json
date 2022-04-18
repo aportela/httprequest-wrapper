@@ -1,0 +1,23 @@
+{
+    "name": "aportela/httprequest-wrapper",
+    "description": "Custom curl http request wrapper",
+    "type": "library",
+    "license": "GPL-3.0-only",
+    "authors": [
+        {
+            "name": "alex",
+            "email": "766f6964+github@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "aportela\\HTTPRequestWrapper\\": "src"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "require": {
+        "psr/log": "^3.0"
+    }
+}
