@@ -48,13 +48,13 @@ class HTTPRequest
             curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
         }
         $response = new \stdClass();
-        $response->content = curl_exec($ch);
+        $response->body = curl_exec($ch);
         $response->code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $response->contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
         curl_close($ch);
         $this->logger->debug("Response code: " . $response->code);
         $this->logger->debug("Response contentType: " . $response->contentType);
-        $this->logger->debug("Response content: " . $response->content);
+        $this->logger->debug("Response body: " . $response->body);
         return ($response);
     }
 }
