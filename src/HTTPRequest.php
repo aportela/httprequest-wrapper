@@ -47,6 +47,9 @@ class HTTPRequest
         if (!empty($this->userAgent)) {
             curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
         }
+        if (is_array($headers) && count($headers) > 0) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        }
         $response = new \stdClass();
         $response->body = curl_exec($ch);
         $response->code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
