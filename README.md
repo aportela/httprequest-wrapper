@@ -4,7 +4,7 @@
 
 ```
 composer require aportela/httprequest-wrapper
-composer require monolog/monolog
+composer require psr/log
 ```
 
 # Code example:
@@ -14,7 +14,7 @@ composer require monolog/monolog
 
     require "vendor/autoload.php";
 
-    $logger = new \Monolog\Logger("http-log");
+    $logger = new \Psr\Log\NullLogger("");
 
     $http = new \aportela\HTTPRequestWrapper\HTTPRequest($logger, "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1");
 
