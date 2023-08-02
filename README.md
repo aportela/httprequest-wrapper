@@ -1,12 +1,23 @@
 # httprequest-wrapper
 
+This is a simple library to wrap & manage native PHP HTTP requests (there are plenty of serious alternatives like [Guzzle](http://docs.guzzlephp.org/, this is my tiny approach to be used in some of my personal projects, should not be taken too seriously).
+
+## Requirements
+
+- mininum php version 8.x
+- curl extension must be enabled
+
+## Limitations
+
+At this time only GET method is supported.
+
 ## Install (composer) dependencies:
 
 ```
 composer require aportela/httprequest-wrapper
 ```
 
-# Code example:
+## Code example:
 
 ```
 <?php
@@ -22,7 +33,7 @@ composer require aportela/httprequest-wrapper
     print_r($response);
 ```
 
-# Response object struct:
+## Response object struct:
 
     code: HTTP response code
     contentType: response content type
