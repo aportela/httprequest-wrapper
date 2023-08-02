@@ -4,7 +4,6 @@
 
 ```
 composer require aportela/httprequest-wrapper
-composer require psr/log
 ```
 
 # Code example:
