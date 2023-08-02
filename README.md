@@ -1,6 +1,6 @@
 # httprequest-wrapper
 
-This is a simple library to wrap & manage native PHP HTTP requests (there are plenty of serious alternatives like [Guzzle](http://docs.guzzlephp.org/, this is my tiny approach to be used in some of my personal projects, should not be taken too seriously).
+This is a simple library to wrap & manage native PHP HTTP requests (there are plenty of serious alternatives like [Guzzle](http://docs.guzzlephp.org/), this is my tiny approach to be used in some of my personal projects, should not be taken too seriously).
 
 ## Requirements
 
