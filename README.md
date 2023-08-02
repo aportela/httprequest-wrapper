@@ -26,4 +26,5 @@ composer require aportela/httprequest-wrapper
 
     code: HTTP response code
     contentType: response content type
+    headers: response headers array
     body: response body contents
