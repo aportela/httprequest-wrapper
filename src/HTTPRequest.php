@@ -32,7 +32,7 @@ class HTTPRequest
         $this->logger->debug("HTTPRequest::__destruct");
     }
 
-    public function GET(string $url, array $params = [], array $headers = [])
+    public function GET(string $url, array $params = [], array $headers = []): \aportela\HTTPRequestWrapper\HTTPResponse
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -44,20 +44,34 @@ class HTTPRequest
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+        $responseHeaders = array();
+        // https://stackoverflow.com/a/41135574
+        curl_setopt(
+            $ch,
+            CURLOPT_HEADERFUNCTION,
+            function ($curl, $header) use (&$responseHeaders) {
+                $len = strlen($header);
+                $header = explode(':', $header, 2);
+                if (count($header) < 2) // ignore invalid headers
+                    return $len;
+                $responseHeaders[strtolower(trim($header[0]))][] = trim($header[1]);
+                return $len;
+            }
+        );
         if (!empty($this->userAgent)) {
             curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
         }
         if (is_array($headers) && count($headers) > 0) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         }
-        $response = new \stdClass();
-        $response->body = curl_exec($ch);
-        $response->code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $response->contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+        $body = curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $this->logger->debug("Response code: " . $code);
+        $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+        $this->logger->debug("Response contentType: " . $contentType);
         curl_close($ch);
-        $this->logger->debug("Response code: " . $response->code);
-        $this->logger->debug("Response contentType: " . $response->contentType);
-        $this->logger->debug("Response body: " . $response->body);
-        return ($response);
+        $this->logger->debug("Response headers: " . print_r($responseHeaders, true));
+        $this->logger->debug("Response body: " . $body);
+        return (new HTTPResponse($code, $contentType, $responseHeaders, $body));
     }
 }
