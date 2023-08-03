@@ -5,8 +5,8 @@ namespace aportela\HTTPRequestWrapper;
 class HTTPRequest
 {
 
-    protected $logger;
-    protected $userAgent;
+    protected \Psr\Log\LoggerInterface $logger;
+    protected string $userAgent;
 
     const DEFAULT_USER_AGENT = "HTTPRequest-Wrapper - https://github.com/aportela/httprequest-wrapper (766f6964+github@gmail.com)";
 
