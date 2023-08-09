@@ -13,9 +13,7 @@ At this time only GET method is supported.
 
 ## Install (composer) dependencies:
 
-```
-composer require aportela/httprequest-wrapper
-```
+> composer require aportela/httprequest-wrapper
 
 ## Code example:
 
