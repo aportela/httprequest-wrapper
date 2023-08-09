@@ -5,8 +5,8 @@ namespace aportela\HTTPRequestWrapper;
 class HTTPResponse
 {
     public int $code = 0;
-    public string $contentType = "";
-    public array $headers = array();
+    protected string $contentType = "";
+    protected array $headers = array();
     public $body = null;
 
     public function __construct(int $code, string $contentType, array $headers, $body)
@@ -19,5 +19,20 @@ class HTTPResponse
 
     public function __destruct()
     {
+    }
+
+    public function getContentType(): string
+    {
+        return ($this->contentType);
+    }
+
+    public function hasHeader(string $header): bool
+    {
+        return (array_key_exists($header, $this->headers));
+    }
+
+    public function getHeaderValues(string $header): array
+    {
+        return ($this->headers[$header]);
     }
 }
