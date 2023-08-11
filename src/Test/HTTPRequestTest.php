@@ -6,7 +6,6 @@ require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . "vendor" . DIRECT
 
 class HTTPRequestTest extends \PHPUnit\Framework\TestCase
 {
-
     protected static $logger;
 
     /**

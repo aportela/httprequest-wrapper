@@ -4,11 +4,10 @@ namespace aportela\HTTPRequestWrapper;
 
 class HTTPRequest
 {
-
     protected \Psr\Log\LoggerInterface $logger;
     protected string $userAgent;
 
-    const DEFAULT_USER_AGENT = "HTTPRequest-Wrapper - https://github.com/aportela/httprequest-wrapper (766f6964+github@gmail.com)";
+    public const DEFAULT_USER_AGENT = "HTTPRequest-Wrapper - https://github.com/aportela/httprequest-wrapper (766f6964+github@gmail.com)";
 
     public function __construct(\Psr\Log\LoggerInterface $logger, string $userAgent = "")
     {
@@ -52,8 +51,9 @@ class HTTPRequest
             function ($curl, $header) use (&$responseHeaders) {
                 $len = strlen($header);
                 $header = explode(':', $header, 2);
-                if (count($header) < 2) // ignore invalid headers
+                if (count($header) < 2) { // ignore invalid headers
                     return $len;
+                }
                 $responseHeaders[strtolower(trim($header[0]))][] = trim($header[1]);
                 return $len;
             }
