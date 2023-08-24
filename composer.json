@@ -2,7 +2,7 @@
     "name": "aportela/httprequest-wrapper",
     "description": "Custom curl http request wrapper",
     "type": "library",
-    "license": "AFFERO GENERAL PUBLIC LICENSE",
+    "license": "AGPL-3.0-only",
     "authors": [
         {
             "name": "alex",
