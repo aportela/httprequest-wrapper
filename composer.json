@@ -27,6 +27,7 @@
         "phpunit/phpunit": "^10.3"
     },
     "scripts": {
-        "fix" : "vendor/bin/php-cs-fixer fix src"
+        "fix" : "vendor/bin/php-cs-fixer fix src",
+        "test": "vendor/bin/phpunit"
     }
 }
