@@ -6,6 +6,10 @@ require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . "vendor" . DIRECT
 
 class HTTPRequestTest extends \PHPUnit\Framework\TestCase
 {
+
+    private const EXISTENT_URL = "https://raw.githubusercontent.com/aportela/httprequest-wrapper/main/src/HTTPRequest.php";
+    private const NON_EXISTENT_URL = "https://raw.githubusercontent.com/aportela/httprequest-wrapper/main/src/404_FILE_NOT_FOUND";
+
     protected static $logger;
 
     /**
@@ -41,7 +45,7 @@ class HTTPRequestTest extends \PHPUnit\Framework\TestCase
     public function testHEADPackagistURL(): void
     {
         $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger, "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1");
-        $response = $http->HEAD("https://raw.githubusercontent.com/aportela/httprequest-wrapper/main/src/HTTPRequest.php");
+        $response = $http->HEAD(self::EXISTENT_URL);
         $this->assertEquals($response->code, 200);
         $this->assertEquals($response->getContentType(), "text/plain; charset=utf-8");
         $this->assertTrue($response->hasHeader("content-type"));
@@ -54,13 +58,13 @@ class HTTPRequestTest extends \PHPUnit\Framework\TestCase
     public function testHEADNotFoundURL(): void
     {
         $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger, "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1");
-        $response = $http->HEAD("https://raw.githubusercontent.com/aportela/httprequest-wrapper/main/src/404_FILE_NOT_FOUND");
+        $response = $http->HEAD(self::NON_EXISTENT_URL);
         $this->assertEquals($response->code, 404);
     }
     public function testGETPackagistURL(): void
     {
         $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger, "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1");
-        $response = $http->GET("https://raw.githubusercontent.com/aportela/httprequest-wrapper/main/src/HTTPRequest.php");
+        $response = $http->GET(self::EXISTENT_URL);
         $this->assertEquals($response->code, 200);
         $this->assertEquals($response->getContentType(), "text/plain; charset=utf-8");
         $this->assertTrue($response->hasHeader("content-type"));
@@ -73,7 +77,7 @@ class HTTPRequestTest extends \PHPUnit\Framework\TestCase
     public function testGETNotFoundURL(): void
     {
         $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger, "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1");
-        $response = $http->GET("https://raw.githubusercontent.com/aportela/httprequest-wrapper/main/src/404_FILE_NOT_FOUND");
+        $response = $http->GET(self::NON_EXISTENT_URL);
         $this->assertEquals($response->code, 404);
     }
 }
