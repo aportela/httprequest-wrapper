@@ -40,8 +40,10 @@ class HTTPResponse
     {
         switch ($contentType) {
             case \aportela\HTTPRequestWrapper\ContentType::JSON:
+                return (str_starts_with($this->contentType, "application/json"));
                 break;
             case \aportela\HTTPRequestWrapper\ContentType::XML:
+                return (str_starts_with($this->contentType, "application/xml") || str_starts_with($this->contentType, "text/xml"));
                 break;
         }
         return (false);
