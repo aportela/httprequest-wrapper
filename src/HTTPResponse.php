@@ -35,4 +35,15 @@ class HTTPResponse
     {
         return ($this->headers[$header]);
     }
+
+    public function is(\aportela\HTTPRequestWrapper\ContentType $contentType): bool
+    {
+        switch ($contentType) {
+            case \aportela\HTTPRequestWrapper\ContentType::JSON:
+                break;
+            case \aportela\HTTPRequestWrapper\ContentType::XML:
+                break;
+        }
+        return (false);
+    }
 }
