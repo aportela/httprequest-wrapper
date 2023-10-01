@@ -145,10 +145,19 @@ class HTTPRequest
             curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookiesFilePath);
             curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookiesFilePath);
         }
-        $requestUrl = count($params) > 0 ? $url . '?' . http_build_query($params) : $url;
-        $this->logger->debug("HTTPRequest::GET");
-        curl_setopt($ch, CURLOPT_URL, $requestUrl);
-        $this->logger->debug("Request URL: " . $requestUrl);
+        $this->logger->debug("HTTPRequest::POST");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        $jsonContentType = false;
+        if (is_array($headers) && count($headers) > 0) {
+            foreach ($headers as $header) {
+                if ($header == "Content-Type: application/json") {
+                    $jsonContentType = true;
+                }
+            }
+        }
+        curl_setopt($ch, CURLOPT_POSTFIELDS, !$jsonContentType ? http_build_query($params) : json_encode($params));
+        $this->logger->debug("Request URL: " . $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 3);
