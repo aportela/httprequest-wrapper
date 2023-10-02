@@ -43,41 +43,42 @@ class HTTPRequestTest extends \PHPUnit\Framework\TestCase
 
     public function testHEADPackagistURL(): void
     {
-        $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger, "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1");
+        $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
         $response = $http->HEAD(self::EXISTENT_URL);
         $this->assertEquals($response->code, 200);
         $this->assertEquals($response->getContentType(), "text/plain; charset=utf-8");
-        $this->assertTrue($response->hasHeader("content-type"));
-        $headerValues = $response->getHeaderValues("content-type");
-        $this->assertIsArray($headerValues);
-        $this->assertContains("text/plain; charset=utf-8", $headerValues);
+        $this->assertTrue($response->is(\aportela\HTTPRequestWrapper\contentType::TEXT_PLAIN));
         $this->assertEmpty($response->body);
     }
 
     public function testHEADNotFoundURL(): void
     {
-        $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger, "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1");
+        $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
         $response = $http->HEAD(self::NON_EXISTENT_URL);
         $this->assertEquals($response->code, 404);
     }
 
     public function testGETPackagistURL(): void
     {
-        $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger, "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1");
+        $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
         $response = $http->GET(self::EXISTENT_URL);
         $this->assertEquals($response->code, 200);
-        $this->assertEquals($response->getContentType(), "text/plain; charset=utf-8");
-        $this->assertTrue($response->hasHeader("content-type"));
-        $headerValues = $response->getHeaderValues("content-type");
-        $this->assertIsArray($headerValues);
-        $this->assertContains("text/plain; charset=utf-8", $headerValues);
+        $this->assertTrue($response->is(\aportela\HTTPRequestWrapper\contentType::TEXT_PLAIN));
         $this->assertStringStartsWith("<?php", $response->body);
     }
 
     public function testGETNotFoundURL(): void
     {
-        $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger, "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1");
+        $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
         $response = $http->GET(self::NON_EXISTENT_URL);
         $this->assertEquals($response->code, 404);
+    }
+
+    public function testGETJSONContentTypeAPI(): void
+    {
+        $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
+        $response = $http->GET("https://myfakeapi.com/api/users/1");
+        $this->assertEquals($response->code, 200);
+        $this->assertTrue($response->is(\aportela\HTTPRequestWrapper\contentType::JSON));
     }
 }
