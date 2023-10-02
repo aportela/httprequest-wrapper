@@ -45,7 +45,7 @@ class HTTPRequest
         $this->logger->debug("HTTPRequest::__destruct");
     }
 
-    public function setUserAgent(string $userAgent = ""): HTTPRequest
+    public function setUserAgent(string $userAgent = ""): \aportela\HTTPRequestWrapper\HTTPRequest
     {
         $this->logger->debug("HTTPRequest::setUserAgent " . $userAgent);
         if (!empty($userAgent)) {
@@ -56,7 +56,7 @@ class HTTPRequest
         return ($this);
     }
 
-    public function setReferer(string $referer = ""): HTTPRequest
+    public function setReferer(string $referer = ""): \aportela\HTTPRequestWrapper\HTTPRequest
     {
         $this->logger->debug("HTTPRequest::setReferer " . $referer);
         if (!empty($referer)) {
@@ -71,21 +71,21 @@ class HTTPRequest
         return ($this);
     }
 
-    public function enableCookies(): HTTPRequest
+    public function enableCookies(): \aportela\HTTPRequestWrapper\HTTPRequest
     {
         $this->commonCurlOptions[CURLOPT_COOKIEFILE] = $this->cookiesFilePath;
         $this->commonCurlOptions[CURLOPT_COOKIEJAR] = $this->cookiesFilePath;
         return ($this);
     }
 
-    public function disableCookies(): HTTPRequest
+    public function disableCookies(): \aportela\HTTPRequestWrapper\HTTPRequest
     {
         unset($this->commonCurlOptions[CURLOPT_COOKIEFILE]);
         unset($this->commonCurlOptions[CURLOPT_COOKIEJAR]);
         return ($this);
     }
 
-    public function setCookiesFilePath(string $path = ""): HTTPRequest
+    public function setCookiesFilePath(string $path = ""): \aportela\HTTPRequestWrapper\HTTPRequest
     {
         if (!empty($path)) {
             $this->cookiesFilePath = $path;
@@ -93,6 +93,16 @@ class HTTPRequest
             $this->cookiesFilePath = tempnam(sys_get_temp_dir(), "HTTP_REQUEST_WRAPPER");
         }
         $this->enableCookies();
+        return ($this);
+    }
+
+    public function setHeaders(array $headers = []): \aportela\HTTPRequestWrapper\HTTPRequest
+    {
+        if (is_array($headers) && count($headers) > 0) {
+            $this->commonCurlOptions[CURLOPT_HTTPHEADER] = $headers;
+        } else {
+            unset($this->commonCurlOptions[CURLOPT_HTTPHEADER]);
+        }
         return ($this);
     }
 
@@ -149,9 +159,8 @@ class HTTPRequest
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_URL => $requestUrl
         ];
-        if (is_array($headers) && count($headers) > 0) {
-            $curlHEADOptions[CURLOPT_HTTPHEADER] = $headers;
-        }
+        $this->setHeaders($headers);
+        $this->setReferer($referer);
         return ($this->curlExec($curlHEADOptions));
     }
 
@@ -168,6 +177,8 @@ class HTTPRequest
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_URL => $requestUrl
         ];
+        $this->setHeaders($headers);
+        $this->setReferer($referer);
         return ($this->curlExec($curlGETOptions));
     }
 }
