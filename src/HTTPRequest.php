@@ -10,8 +10,6 @@ class HTTPRequest
     protected bool $useCookies;
     protected string $cookiesFilePath;
 
-    public const DEFAULT_USER_AGENT = "HTTPRequest-Wrapper - https://github.com/aportela/httprequest-wrapper (766f6964+github@gmail.com)";
-
     public function __construct(\Psr\Log\LoggerInterface $logger, string $userAgent = "")
     {
         $this->logger = $logger;
@@ -23,7 +21,7 @@ class HTTPRequest
         if (!empty($userAgent)) {
             $this->commonCurlOptions[CURLOPT_USERAGENT] = $userAgent;
         } else {
-            $this->commonCurlOptions[CURLOPT_USERAGENT] = self::DEFAULT_USER_AGENT;
+            $this->commonCurlOptions[CURLOPT_USERAGENT] = \aportela\HTTPRequestWrapper\UserAgent::DEFAULT->value;
         }
         $this->useCookies = true;
         if ($this->useCookies) {
