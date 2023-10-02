@@ -35,9 +35,9 @@ composer require aportela/httprequest-wrapper
 
 ## Response object struct:
 
-    code: HTTP response code
-    contentType: response content type
-    headers: response headers array
+    code: HTTP response code (int)
+    contentType: response content type (string)
+    headers: response headers (array)
     body: response body contents
 
 ![PHP Composer](https://github.com/aportela/httprequest-wrapper/actions/workflows/php.yml/badge.svg)
