@@ -9,7 +9,7 @@ This is a simple library to wrap & manage native PHP HTTP requests (there are pl
 
 ## Limitations
 
-At this time only GET method is supported.
+At this time only GET/HEAD methods are supported.
 
 ## Install (composer) dependencies:
 
