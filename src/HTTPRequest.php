@@ -35,7 +35,7 @@ class HTTPRequest
         $this->logger->debug("HTTPRequest::__destruct");
     }
 
-    public function HEAD(string $url, array $params = [], array $headers = []): \aportela\HTTPRequestWrapper\HTTPResponse
+    public function HEAD(string $url, array $params = [], array $headers = [], string $referer = ""): \aportela\HTTPRequestWrapper\HTTPResponse
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_NOBODY, true);
@@ -70,6 +70,9 @@ class HTTPRequest
         if (!empty($this->userAgent)) {
             curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
         }
+        if (!empty($referer) && filter_var($referer, FILTER_VALIDATE_URL)) {
+            curl_setopt($ch, CURLOPT_REFERER, $referer);
+        }
         if (is_array($headers) && count($headers) > 0) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         }
@@ -86,7 +89,7 @@ class HTTPRequest
         return (new HTTPResponse($code, $contentType, $responseHeaders, $body));
     }
 
-    public function GET(string $url, array $params = [], array $headers = []): \aportela\HTTPRequestWrapper\HTTPResponse
+    public function GET(string $url, array $params = [], array $headers = [], string $referer = ""): \aportela\HTTPRequestWrapper\HTTPResponse
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -119,6 +122,9 @@ class HTTPRequest
         );
         if (!empty($this->userAgent)) {
             curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
+        }
+        if (!empty($referer) && filter_var($referer, FILTER_VALIDATE_URL)) {
+            curl_setopt($ch, CURLOPT_REFERER, $referer);
         }
         if (is_array($headers) && count($headers) > 0) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
