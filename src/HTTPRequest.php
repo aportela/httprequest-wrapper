@@ -85,6 +85,16 @@ class HTTPRequest
         return ($this);
     }
 
+    public function setCookiesFilePath(string $path = "")
+    {
+        if (!empty($path)) {
+            $this->cookiesFilePath = $path;
+        } else {
+            $this->cookiesFilePath = tempnam(sys_get_temp_dir(), "HTTP_REQUEST_WRAPPER");
+        }
+        $this->enableCookies();
+    }
+
     private function curlExec(array $curlOptions = []): \aportela\HTTPRequestWrapper\HTTPResponse
     {
         $ch = curl_init();
