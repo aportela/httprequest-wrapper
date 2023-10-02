@@ -6,4 +6,5 @@ enum ContentType
 {
     case JSON;
     case XML;
+    case TEXT_PLAIN;
 }
