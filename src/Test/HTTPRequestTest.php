@@ -9,14 +9,14 @@ class HTTPRequestTest extends \PHPUnit\Framework\TestCase
     private const EXISTENT_URL = "https://raw.githubusercontent.com/aportela/httprequest-wrapper/main/src/HTTPRequest.php";
     private const NON_EXISTENT_URL = "https://raw.githubusercontent.com/aportela/httprequest-wrapper/main/src/404_FILE_NOT_FOUND";
 
-    protected static $logger;
+    protected static \Psr\Log\LoggerInterface $logger;
 
     /**
      * Called once just like normal constructor
      */
     public static function setUpBeforeClass(): void
     {
-        self::$logger = new \Psr\Log\NullLogger("");
+        self::$logger = new \Psr\Log\NullLogger();
     }
 
     /**
@@ -47,7 +47,7 @@ class HTTPRequestTest extends \PHPUnit\Framework\TestCase
         $response = $http->HEAD(self::EXISTENT_URL);
         $this->assertEquals($response->code, 200);
         $this->assertEquals($response->getContentType(), "text/plain; charset=utf-8");
-        $this->assertTrue($response->is(\aportela\HTTPRequestWrapper\contentType::TEXT_PLAIN));
+        $this->assertTrue($response->is(\aportela\HTTPRequestWrapper\ContentType::TEXT_PLAIN));
         $this->assertEmpty($response->body);
     }
 
@@ -63,7 +63,7 @@ class HTTPRequestTest extends \PHPUnit\Framework\TestCase
         $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
         $response = $http->GET(self::EXISTENT_URL);
         $this->assertEquals($response->code, 200);
-        $this->assertTrue($response->is(\aportela\HTTPRequestWrapper\contentType::TEXT_PLAIN));
+        $this->assertTrue($response->is(\aportela\HTTPRequestWrapper\ContentType::TEXT_PLAIN));
         $this->assertStringStartsWith("<?php", $response->body);
     }
 
@@ -79,6 +79,6 @@ class HTTPRequestTest extends \PHPUnit\Framework\TestCase
         $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
         $response = $http->GET("https://myfakeapi.com/api/users/1");
         $this->assertEquals($response->code, 200);
-        $this->assertTrue($response->is(\aportela\HTTPRequestWrapper\contentType::JSON));
+        $this->assertTrue($response->is(\aportela\HTTPRequestWrapper\ContentType::JSON));
     }
 }

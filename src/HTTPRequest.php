@@ -24,11 +24,9 @@ class HTTPRequest
             $this->commonCurlOptions[CURLOPT_USERAGENT] = \aportela\HTTPRequestWrapper\UserAgent::DEFAULT->value;
         }
         $this->useCookies = true;
-        if ($this->useCookies) {
-            $this->cookiesFilePath = tempnam(sys_get_temp_dir(), "HTTP_REQUEST_WRAPPER");
-            $this->commonCurlOptions[CURLOPT_COOKIEFILE] = $this->cookiesFilePath;
-            $this->commonCurlOptions[CURLOPT_COOKIEJAR] = $this->cookiesFilePath;
-        }
+        $this->cookiesFilePath = tempnam(sys_get_temp_dir(), "HTTP_REQUEST_WRAPPER");
+        $this->commonCurlOptions[CURLOPT_COOKIEFILE] = $this->cookiesFilePath;
+        $this->commonCurlOptions[CURLOPT_COOKIEJAR] = $this->cookiesFilePath;
         $loadedExtensions = get_loaded_extensions();
         if (in_array("curl", $loadedExtensions)) {
             $this->logger->debug("HTTPRequest::__construct");
