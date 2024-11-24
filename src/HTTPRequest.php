@@ -39,6 +39,9 @@ class HTTPRequest
     public function __destruct()
     {
         $this->logger->debug("HTTPRequest::__destruct");
+        if (! empty($this->cookiesFilePath) && file_exists(($this->cookiesFilePath))) {
+            @unlink($this->cookiesFilePath);
+        }
     }
 
     public function setUserAgent(string $userAgent = ""): \aportela\HTTPRequestWrapper\HTTPRequest
