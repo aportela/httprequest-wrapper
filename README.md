@@ -4,7 +4,7 @@ This is a simple library to wrap & manage native PHP HTTP requests (there are pl
 
 ## Requirements
 
-- mininum php version 8.x
+- mininum php version 8.4
 - curl extension must be enabled
 
 ## Limitations
