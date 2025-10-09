@@ -4,6 +4,7 @@ namespace aportela\MediaWikiWrapper\Test;
 
 require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "autoload.php";
 
+#[\PHPUnit\Framework\Attributes\RequiresPhpExtension('curl')]
 class HTTPRequestTest extends \PHPUnit\Framework\TestCase
 {
     private const EXISTENT_URL = "https://raw.githubusercontent.com/aportela/httprequest-wrapper/main/src/HTTPRequest.php";
@@ -41,7 +42,7 @@ class HTTPRequestTest extends \PHPUnit\Framework\TestCase
     {
     }
 
-    public function testHEADPackagistURL(): void
+    public function testHeadPackagistUrl(): void
     {
         $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
         $response = $http->HEAD(self::EXISTENT_URL);
@@ -51,14 +52,14 @@ class HTTPRequestTest extends \PHPUnit\Framework\TestCase
         $this->assertEmpty($response->body);
     }
 
-    public function testHEADNotFoundURL(): void
+    public function testHeadNotFoundUrl(): void
     {
         $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
         $response = $http->HEAD(self::NON_EXISTENT_URL);
         $this->assertEquals($response->code, 404);
     }
 
-    public function testGETPackagistURL(): void
+    public function testGetPackagistUrl(): void
     {
         $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
         $response = $http->GET(self::EXISTENT_URL);
@@ -67,14 +68,14 @@ class HTTPRequestTest extends \PHPUnit\Framework\TestCase
         $this->assertStringStartsWith("<?php", $response->body);
     }
 
-    public function testGETNotFoundURL(): void
+    public function testGetNotFoundUrl(): void
     {
         $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
         $response = $http->GET(self::NON_EXISTENT_URL);
         $this->assertEquals($response->code, 404);
     }
 
-    public function testGETJSONContentTypeAPI(): void
+    public function testGetJsonContentTypeApi(): void
     {
         $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
         $response = $http->GET("https://myfakeapi.com/api/users/1");
