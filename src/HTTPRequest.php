@@ -27,12 +27,16 @@ class HTTPRequest
         $this->cookiesFilePath = tempnam(sys_get_temp_dir(), "HTTP_REQUEST_WRAPPER");
         $this->commonCurlOptions[CURLOPT_COOKIEFILE] = $this->cookiesFilePath;
         $this->commonCurlOptions[CURLOPT_COOKIEJAR] = $this->cookiesFilePath;
-        $loadedExtensions = get_loaded_extensions();
-        if (in_array("curl", $loadedExtensions)) {
-            $this->logger->debug("HTTPRequest::__construct");
+        if (extension_loaded("curl")) {
+            if (function_exists('curl_version')) {
+                $this->logger->debug("HTTPRequest::__construct");
+            } else {
+                $this->logger->critical("HTTPRequest::__construct ERROR: curl extension not found");
+                throw new \aportela\HTTPRequestWrapper\Exception\CurlMissingException("loaded extensions: " . implode(", ", get_loaded_extensions()));
+            }
         } else {
-            $this->logger->critical("HTTPRequest::__construct ERROR: curl extension not found");
-            throw new \aportela\HTTPRequestWrapper\Exception\CurlMissingException("loaded extensions: " . implode(", ", $loadedExtensions));
+            $this->logger->critical("HTTPRequest::__construct ERROR: curl extension loaded, but curl functions not available");
+            throw new \aportela\HTTPRequestWrapper\Exception\CurlMissingException("loaded extensions: " . implode(", ", get_loaded_extensions()));
         }
     }
 
