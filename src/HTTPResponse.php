@@ -6,10 +6,16 @@ class HTTPResponse
 {
     public int $code = 0;
     protected string $contentType = "";
+    /**
+     * @var array<string, mixed>
+     */
     protected array $headers = array();
-    public $body = null;
+    public mixed $body = null;
 
-    public function __construct(int $code, string $contentType, array $headers, $body)
+    /**
+     * @param array<string, mixed> $headers
+     */
+    public function __construct(int $code, string $contentType, array $headers = [], mixed $body = null)
     {
         $this->code = $code;
         $this->contentType = $contentType;
@@ -31,6 +37,9 @@ class HTTPResponse
         return (array_key_exists($header, $this->headers));
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getHeaderValues(string $header): array
     {
         return ($this->headers[$header]);

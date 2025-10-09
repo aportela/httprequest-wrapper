@@ -5,12 +5,15 @@ namespace aportela\HTTPRequestWrapper;
 class HTTPRequest
 {
     protected \Psr\Log\LoggerInterface $logger;
+    /**
+     * @var array<mixed, mixed>
+     */
     protected array $commonCurlOptions;
     protected string $userAgent;
     protected bool $useCookies;
     protected string $cookiesFilePath;
 
-    public function __construct(\Psr\Log\LoggerInterface $logger, string $userAgent = "")
+    public function __construct(\Psr\Log\LoggerInterface $logger, ?string $userAgent = null)
     {
         $this->logger = $logger;
         $this->commonCurlOptions = [
@@ -48,7 +51,7 @@ class HTTPRequest
         }
     }
 
-    public function setUserAgent(string $userAgent = ""): \aportela\HTTPRequestWrapper\HTTPRequest
+    public function setUserAgent(?string $userAgent = null): \aportela\HTTPRequestWrapper\HTTPRequest
     {
         $this->logger->debug("HTTPRequest::setUserAgent " . $userAgent);
         if (!empty($userAgent)) {
@@ -59,7 +62,7 @@ class HTTPRequest
         return ($this);
     }
 
-    public function setReferer(string $referer = ""): \aportela\HTTPRequestWrapper\HTTPRequest
+    public function setReferer(?string $referer = null): \aportela\HTTPRequestWrapper\HTTPRequest
     {
         $this->logger->debug("HTTPRequest::setReferer " . $referer);
         if (!empty($referer)) {
@@ -88,7 +91,7 @@ class HTTPRequest
         return ($this);
     }
 
-    public function setCookiesFilePath(string $path = ""): \aportela\HTTPRequestWrapper\HTTPRequest
+    public function setCookiesFilePath(?string $path = null): \aportela\HTTPRequestWrapper\HTTPRequest
     {
         if (!empty($path)) {
             $this->cookiesFilePath = $path;
@@ -99,9 +102,12 @@ class HTTPRequest
         return ($this);
     }
 
+    /**
+     * @param array<string, mixed> $headers
+     */
     public function setHeaders(array $headers = []): \aportela\HTTPRequestWrapper\HTTPRequest
     {
-        if (is_array($headers) && count($headers) > 0) {
+        if (count($headers) > 0) {
             $this->commonCurlOptions[CURLOPT_HTTPHEADER] = $headers;
         } else {
             unset($this->commonCurlOptions[CURLOPT_HTTPHEADER]);
@@ -109,13 +115,16 @@ class HTTPRequest
         return ($this);
     }
 
+    /**
+     * @param array <mixed, mixed> $curlOptions
+     */
     private function curlExec(array $curlOptions = []): \aportela\HTTPRequestWrapper\HTTPResponse
     {
         $ch = curl_init();
         foreach ($this->commonCurlOptions as $key => $value) {
             curl_setopt($ch, $key, $value);
         }
-        if (is_array($curlOptions) && count($curlOptions) > 0) {
+        if (count($curlOptions) > 0) {
             foreach ($curlOptions as $key => $value) {
                 curl_setopt($ch, $key, $value);
             }
@@ -148,7 +157,11 @@ class HTTPRequest
         return (new HTTPResponse($code, $contentType, $responseHeaders, $body));
     }
 
-    public function HEAD(string $url, array $params = [], array $headers = [], string $referer = ""): \aportela\HTTPRequestWrapper\HTTPResponse
+    /**
+     * @param array<mixed, mixed> $params
+     * @param array<string, mixed> $headers
+     */
+    public function HEAD(string $url, array $params = [], array $headers = [], ?string $referer = null): \aportela\HTTPRequestWrapper\HTTPResponse
     {
         $this->logger->debug("HTTPRequest::HEAD");
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
@@ -167,7 +180,11 @@ class HTTPRequest
         return ($this->curlExec($curlHEADOptions));
     }
 
-    public function GET(string $url, array $params = [], array $headers = [], string $referer = ""): \aportela\HTTPRequestWrapper\HTTPResponse
+    /**
+     * @param array<mixed, mixed> $params
+     * @param array<string, mixed> $headers
+     */
+    public function GET(string $url, array $params = [], array $headers = [], ?string $referer = null): \aportela\HTTPRequestWrapper\HTTPResponse
     {
         $this->logger->debug("HTTPRequest::GET");
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
