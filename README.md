@@ -13,13 +13,13 @@ At this time only GET/HEAD methods are supported.
 
 ## Install (composer) dependencies:
 
-```
+```Shell
 composer require aportela/httprequest-wrapper
 ```
 
 ## Code example:
 
-```
+```php
 <?php
 
     require "vendor/autoload.php";
