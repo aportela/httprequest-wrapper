@@ -148,14 +148,14 @@ class HTTPRequest
         if ($body !== false) {
             $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $this->logger->debug("Response code: " . $code);
-            $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+            $contentType = (string) curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
             $this->logger->debug("Response contentType: " . $contentType);
             $cookies = curl_getinfo($ch, CURLINFO_COOKIELIST);
             $this->logger->debug("Response cookies: " . print_r($cookies, true));
             curl_close($ch);
             $this->logger->debug("Response headers: " . print_r($responseHeaders, true));
             $this->logger->debug("Response body: " . $body);
-            return (new HTTPResponse($code, $contentType, $responseHeaders, $body));
+            return (new HTTPResponse($code, $contentType, $responseHeaders, (string) $body));
         } else {
             $this->logger->error("Curl exec error", [curl_errno($ch), curl_error($ch), curl_getinfo($ch)]);
             throw new \aportela\HTTPRequestWrapper\Exception\CurlExecException(curl_error($ch), curl_errno($ch));

@@ -65,6 +65,7 @@ class HTTPRequestTest extends \PHPUnit\Framework\TestCase
         $response = $http->GET(self::EXISTENT_URL);
         $this->assertEquals($response->code, 200);
         $this->assertTrue($response->is(\aportela\HTTPRequestWrapper\ContentType::TEXT_PLAIN));
+        $this->assertNotEmpty($response->body);
         $this->assertStringStartsWith("<?php", $response->body);
     }
 

@@ -10,12 +10,12 @@ class HTTPResponse
      * @var array<string, mixed>
      */
     protected array $headers = array();
-    public mixed $body = null;
+    public ?string $body = null;
 
     /**
      * @param array<string, mixed> $headers
      */
-    public function __construct(int $code, string $contentType, array $headers = [], mixed $body = null)
+    public function __construct(int $code, string $contentType, array $headers = [], ?string $body = null)
     {
         $this->code = $code;
         $this->contentType = $contentType;
