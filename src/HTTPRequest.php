@@ -31,10 +31,8 @@ class HTTPRequest
         $this->commonCurlOptions[CURLOPT_COOKIEFILE] = $this->cookiesFilePath;
         $this->commonCurlOptions[CURLOPT_COOKIEJAR] = $this->cookiesFilePath;
         if (extension_loaded("curl")) {
-            if (function_exists('curl_version')) {
-                $this->logger->debug("HTTPRequest::__construct");
-            } else {
-                $this->logger->critical("HTTPRequest::__construct ERROR: curl extension not found");
+            if (! function_exists('curl_version')) {
+                $this->logger->critical("aportela\HTTPRequestWrapper\HTTPRequest::__construct - Error: curl extension not found", get_loaded_extensions());
                 throw new \aportela\HTTPRequestWrapper\Exception\CurlMissingException("loaded extensions: " . implode(", ", get_loaded_extensions()));
             }
         } else {
@@ -45,7 +43,6 @@ class HTTPRequest
 
     public function __destruct()
     {
-        $this->logger->debug("HTTPRequest::__destruct");
         if (! empty($this->cookiesFilePath) && file_exists(($this->cookiesFilePath))) {
             @unlink($this->cookiesFilePath);
         }
@@ -53,7 +50,6 @@ class HTTPRequest
 
     public function setUserAgent(?string $userAgent = null): \aportela\HTTPRequestWrapper\HTTPRequest
     {
-        $this->logger->debug("HTTPRequest::setUserAgent " . $userAgent);
         if (!empty($userAgent)) {
             $this->commonCurlOptions[CURLOPT_USERAGENT] = $userAgent;
         } elseif (array_key_exists(CURLOPT_USERAGENT, $this->commonCurlOptions)) {
@@ -64,7 +60,6 @@ class HTTPRequest
 
     public function setReferer(?string $referer = null): \aportela\HTTPRequestWrapper\HTTPRequest
     {
-        $this->logger->debug("HTTPRequest::setReferer " . $referer);
         if (!empty($referer)) {
             if (filter_var($referer, FILTER_VALIDATE_URL)) {
                 $this->commonCurlOptions[CURLOPT_REFERER] = $referer;
@@ -147,17 +142,17 @@ class HTTPRequest
         $body = curl_exec($ch);
         if ($body !== false) {
             $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            $this->logger->debug("Response code: " . $code);
+            $this->logger->debug("aportela\HTTPRequestWrapper\HTTPRequest::curlExec - Response code: " . $code);
             $contentType = (string) curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-            $this->logger->debug("Response contentType: " . $contentType);
+            $this->logger->debug("aportela\HTTPRequestWrapper\HTTPRequest::curlExec - Response contentType: " . $contentType);
             $cookies = curl_getinfo($ch, CURLINFO_COOKIELIST);
-            $this->logger->debug("Response cookies: " . print_r($cookies, true));
+            $this->logger->debug("aportela\HTTPRequestWrapper\HTTPRequest::curlExec - Response cookies: " . print_r($cookies, true));
             curl_close($ch);
-            $this->logger->debug("Response headers: " . print_r($responseHeaders, true));
-            $this->logger->debug("Response body: " . $body);
+            $this->logger->debug("aportela\HTTPRequestWrapper\HTTPRequest::curlExec - Response headers: " . print_r($responseHeaders, true));
+            $this->logger->debug("aportela\HTTPRequestWrapper\HTTPRequest::curlExec - Response body: " . $body);
             return (new HTTPResponse($code, $contentType, $responseHeaders, (string) $body));
         } else {
-            $this->logger->error("Curl exec error", [curl_errno($ch), curl_error($ch), curl_getinfo($ch)]);
+            $this->logger->error("aportela\HTTPRequestWrapper\HTTPRequest::curlExec - Error", [curl_errno($ch), curl_error($ch), curl_getinfo($ch)]);
             throw new \aportela\HTTPRequestWrapper\Exception\CurlExecException(curl_error($ch), curl_errno($ch));
         }
     }
@@ -168,12 +163,11 @@ class HTTPRequest
      */
     public function HEAD(string $url, array $params = [], array $headers = [], ?string $referer = null): \aportela\HTTPRequestWrapper\HTTPResponse
     {
-        $this->logger->debug("HTTPRequest::HEAD");
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
             throw new \aportela\HTTPRequestWrapper\Exception\InvalidParamException("url");
         }
         $requestUrl = count($params) > 0 ? $url . '?' . http_build_query($params) : $url;
-        $this->logger->debug("Request URL: " . $requestUrl);
+        $this->logger->debug("aportela\HTTPRequestWrapper\HTTPRequest::HEAD - URL: " . $requestUrl);
         $curlHEADOptions = [
             CURLOPT_NOBODY => true,
             CURLOPT_RETURNTRANSFER => true,
@@ -191,12 +185,11 @@ class HTTPRequest
      */
     public function GET(string $url, array $params = [], array $headers = [], ?string $referer = null): \aportela\HTTPRequestWrapper\HTTPResponse
     {
-        $this->logger->debug("HTTPRequest::GET");
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
             throw new \aportela\HTTPRequestWrapper\Exception\InvalidParamException("url");
         }
         $requestUrl = count($params) > 0 ? $url . '?' . http_build_query($params) : $url;
-        $this->logger->debug("Request URL: " . $requestUrl);
+        $this->logger->debug("aportela\HTTPRequestWrapper\HTTPRequest::GET - URL: " . $requestUrl);
         $curlGETOptions = [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
