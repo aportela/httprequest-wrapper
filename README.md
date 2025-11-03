@@ -31,7 +31,11 @@ composer require aportela/httprequest-wrapper
 
     try {
         $response = $http->GET("https://packagist.org/packages/aportela/httprequest-wrapper");
-        print_r($response);
+        if ($response->code == 200) {
+            echo $response->body . PHP_EOL;
+        } else {
+            echo "Error getting remote url, http response code: {$response->code}" . PHP_EOL;
+        }
     } catch (\aportela\HTTPRequestWrapper\Exception\CurlExecException $e) {
         // this exception is thrown if the curl execution fails and the remote server does not respond (ex: cannot open the connection, the connection has been reset, ...)
         echo "Error executing curl: " . $e->getMessage();
