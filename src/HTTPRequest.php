@@ -130,13 +130,17 @@ class HTTPRequest
             $ch,
             CURLOPT_HEADERFUNCTION,
             function ($curl, $header) use (&$responseHeaders) {
-                $len = strlen($header);
-                $header = explode(':', $header, 2);
-                if (count($header) < 2) { // ignore invalid headers
+                if (is_string($header)) {
+                    $len = strlen($header);
+                    $header = explode(':', $header, 2);
+                    if (count($header) < 2) { // ignore invalid headers
+                        return $len;
+                    }
+                    $responseHeaders[strtolower(trim($header[0]))][] = trim($header[1]);
                     return $len;
+                } else {
+                    return (0);
                 }
-                $responseHeaders[strtolower(trim($header[0]))][] = trim($header[1]);
-                return $len;
             }
         );
         $body = curl_exec($ch);
