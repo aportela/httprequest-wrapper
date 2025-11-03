@@ -64,7 +64,7 @@ class HTTPRequest
             if (filter_var($referer, FILTER_VALIDATE_URL)) {
                 $this->commonCurlOptions[CURLOPT_REFERER] = $referer;
             } else {
-                throw new \aportela\HTTPRequestWrapper\Exception\InvalidParamException("referer");
+                throw new \InvalidArgumentException("referer");
             }
         } else {
             unset($this->commonCurlOptions[CURLOPT_REFERER]);
@@ -164,7 +164,7 @@ class HTTPRequest
     public function HEAD(string $url, array $params = [], array $headers = [], ?string $referer = null): \aportela\HTTPRequestWrapper\HTTPResponse
     {
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new \aportela\HTTPRequestWrapper\Exception\InvalidParamException("url");
+            throw new \InvalidArgumentException("url");
         }
         $requestUrl = count($params) > 0 ? $url . '?' . http_build_query($params) : $url;
         $this->logger->debug("aportela\HTTPRequestWrapper\HTTPRequest::HEAD - URL: " . $requestUrl);
@@ -186,7 +186,7 @@ class HTTPRequest
     public function GET(string $url, array $params = [], array $headers = [], ?string $referer = null): \aportela\HTTPRequestWrapper\HTTPResponse
     {
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new \aportela\HTTPRequestWrapper\Exception\InvalidParamException("url");
+            throw new \InvalidArgumentException("url");
         }
         $requestUrl = count($params) > 0 ? $url . '?' . http_build_query($params) : $url;
         $this->logger->debug("aportela\HTTPRequestWrapper\HTTPRequest::GET - URL: " . $requestUrl);
