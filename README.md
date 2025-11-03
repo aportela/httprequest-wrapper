@@ -26,11 +26,16 @@ composer require aportela/httprequest-wrapper
 
     $logger = new \Psr\Log\NullLogger("");
 
+    // it requires curl extension, otherwise an \aportela\HTTPRequestWrapper\Exception\CurlMissingException is thrown
     $http = new \aportela\HTTPRequestWrapper\HTTPRequest($logger, "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1");
 
-    $response = $http->GET("https://packagist.org/packages/aportela/httprequest-wrapper");
-
-    print_r($response);
+    try {
+        $response = $http->GET("https://packagist.org/packages/aportela/httprequest-wrapper");
+        print_r($response);
+    } catch (\aportela\HTTPRequestWrapper\Exception\CurlExecException $e) {
+        // this exception is thrown if the curl execution fails and the remote server does not respond (ex: cannot open the connection, the connection has been reset, ...)
+        echo "Error executing curl: " . $e->getMessage();
+    }
 ```
 
 ## Response object struct:
