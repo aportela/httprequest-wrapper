@@ -47,6 +47,6 @@ composer require aportela/httprequest-wrapper
     code: HTTP response code (int)
     contentType: response content type (string)
     headers: response headers (array)
-    body: response body contents
+    body: response body contents (null|string)
 
 ![PHP Composer](https://github.com/aportela/httprequest-wrapper/actions/workflows/php.yml/badge.svg)
