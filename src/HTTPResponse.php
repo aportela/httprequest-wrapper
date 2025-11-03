@@ -7,13 +7,13 @@ class HTTPResponse
     public int $code = 0;
     protected string $contentType = "";
     /**
-     * @var array<string, mixed>
+     * @var array<string, string[]>
      */
     protected array $headers = array();
     public ?string $body = null;
 
     /**
-     * @param array<string, mixed> $headers
+     * @param array<string, string[]> $headers
      */
     public function __construct(int $code, string $contentType, array $headers = [], ?string $body = null)
     {
@@ -23,9 +23,7 @@ class HTTPResponse
         $this->body = $body;
     }
 
-    public function __destruct()
-    {
-    }
+    public function __destruct() {}
 
     public function getContentType(): string
     {
@@ -34,15 +32,15 @@ class HTTPResponse
 
     public function hasHeader(string $header): bool
     {
-        return (array_key_exists($header, $this->headers));
+        return (array_key_exists(strtolower(trim($header)), $this->headers));
     }
 
     /**
-     * @return array<string, mixed>
+     * @return string[]
      */
     public function getHeaderValues(string $header): array
     {
-        return ($this->headers[$header]);
+        return ($this->headers[strtolower(trim($header))] ?? []);
     }
 
     public function is(\aportela\HTTPRequestWrapper\ContentType $contentType): bool
