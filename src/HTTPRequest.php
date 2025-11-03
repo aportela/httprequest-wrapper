@@ -16,6 +16,15 @@ class HTTPRequest
     public function __construct(\Psr\Log\LoggerInterface $logger, ?string $userAgent = null)
     {
         $this->logger = $logger;
+        if (extension_loaded("curl")) {
+            if (! function_exists('curl_version')) {
+                $this->logger->critical("aportela\HTTPRequestWrapper\HTTPRequest::__construct - Error: curl extension not found", get_loaded_extensions());
+                throw new \aportela\HTTPRequestWrapper\Exception\CurlMissingException("loaded extensions: " . implode(", ", get_loaded_extensions()));
+            }
+        } else {
+            $this->logger->critical("HTTPRequest::__construct ERROR: curl extension loaded, but curl functions not available");
+            throw new \aportela\HTTPRequestWrapper\Exception\CurlMissingException("loaded extensions: " . implode(", ", get_loaded_extensions()));
+        }
         $this->commonCurlOptions = [
             CURLOPT_SSL_VERIFYHOST => 0,
             CURLOPT_SSL_VERIFYPEER => 0,
@@ -30,15 +39,6 @@ class HTTPRequest
         $this->cookiesFilePath = tempnam(sys_get_temp_dir(), "HTTP_REQUEST_WRAPPER");
         $this->commonCurlOptions[CURLOPT_COOKIEFILE] = $this->cookiesFilePath;
         $this->commonCurlOptions[CURLOPT_COOKIEJAR] = $this->cookiesFilePath;
-        if (extension_loaded("curl")) {
-            if (! function_exists('curl_version')) {
-                $this->logger->critical("aportela\HTTPRequestWrapper\HTTPRequest::__construct - Error: curl extension not found", get_loaded_extensions());
-                throw new \aportela\HTTPRequestWrapper\Exception\CurlMissingException("loaded extensions: " . implode(", ", get_loaded_extensions()));
-            }
-        } else {
-            $this->logger->critical("HTTPRequest::__construct ERROR: curl extension loaded, but curl functions not available");
-            throw new \aportela\HTTPRequestWrapper\Exception\CurlMissingException("loaded extensions: " . implode(", ", get_loaded_extensions()));
-        }
     }
 
     public function __destruct()
