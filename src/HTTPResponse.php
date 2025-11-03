@@ -23,7 +23,9 @@ class HTTPResponse
         $this->body = $body;
     }
 
-    public function __destruct() {}
+    public function __destruct()
+    {
+    }
 
     public function getContentType(): string
     {
