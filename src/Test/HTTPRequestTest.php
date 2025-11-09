@@ -10,7 +10,7 @@ require_once dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SE
 final class HTTPRequestTest extends \PHPUnit\Framework\TestCase
 {
     private const string EXISTENT_URL = "https://raw.githubusercontent.com/aportela/httprequest-wrapper/main/src/HTTPRequest.php";
-    
+
     private const string NON_EXISTENT_URL = "https://raw.githubusercontent.com/aportela/httprequest-wrapper/main/src/404_FILE_NOT_FOUND";
 
     private static \Psr\Log\LoggerInterface $logger;

@@ -10,11 +10,11 @@ class HTTPRequest
      * @var array<mixed, mixed>
      */
     protected array $commonCurlOptions;
-    
+
     protected string $userAgent;
-    
+
     protected bool $useCookies;
-    
+
     protected string $cookiesFilePath;
 
     public function __construct(protected \Psr\Log\LoggerInterface $logger, ?string $userAgent = null)
@@ -28,7 +28,7 @@ class HTTPRequest
             $this->logger->critical("HTTPRequest::__construct ERROR: curl extension loaded, but curl functions not available");
             throw new \aportela\HTTPRequestWrapper\Exception\CurlMissingException("loaded extensions: " . implode(", ", get_loaded_extensions()));
         }
-        
+
         $this->commonCurlOptions = [
             CURLOPT_SSL_VERIFYHOST => 0,
             CURLOPT_SSL_VERIFYPEER => 0,
@@ -39,7 +39,7 @@ class HTTPRequest
         } else {
             $this->commonCurlOptions[CURLOPT_USERAGENT] = \aportela\HTTPRequestWrapper\UserAgent::DEFAULT->value;
         }
-        
+
         $this->useCookies = true;
         $this->cookiesFilePath = tempnam(sys_get_temp_dir(), "HTTP_REQUEST_WRAPPER");
         $this->commonCurlOptions[CURLOPT_COOKIEFILE] = $this->cookiesFilePath;
@@ -60,7 +60,7 @@ class HTTPRequest
         } elseif (array_key_exists(CURLOPT_USERAGENT, $this->commonCurlOptions)) {
             unset($this->commonCurlOptions[CURLOPT_USERAGENT]);
         }
-        
+
         return ($this);
     }
 
@@ -75,7 +75,7 @@ class HTTPRequest
         } else {
             unset($this->commonCurlOptions[CURLOPT_REFERER]);
         }
-        
+
         return ($this);
     }
 
@@ -111,7 +111,7 @@ class HTTPRequest
         } else {
             unset($this->commonCurlOptions[CURLOPT_HTTPHEADER]);
         }
-        
+
         return ($this);
     }
 
@@ -128,7 +128,7 @@ class HTTPRequest
         foreach ($curlOptions as $key => $value) {
             curl_setopt($ch, $key, $value);
         }
-        
+
         $responseHeaders = [];
         // https://stackoverflow.com/a/41135574
         curl_setopt(
@@ -141,7 +141,7 @@ class HTTPRequest
                     if (count($header) < 2) { // ignore invalid headers
                         return $len;
                     }
-                    
+
                     $responseHeaders[strtolower(trim($header[0]))][] = trim($header[1]);
                     return $len;
                 } else {
@@ -176,7 +176,7 @@ class HTTPRequest
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
             throw new \InvalidArgumentException("url");
         }
-        
+
         $requestUrl = $params !== [] ? $url . '?' . http_build_query($params) : $url;
         $this->logger->debug(\aportela\HTTPRequestWrapper\HTTPRequest::class . '::HEAD - URL: ' . $requestUrl);
         $curlHEADOptions = [
@@ -199,7 +199,7 @@ class HTTPRequest
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
             throw new \InvalidArgumentException("url");
         }
-        
+
         $requestUrl = $params !== [] ? $url . '?' . http_build_query($params) : $url;
         $this->logger->debug(\aportela\HTTPRequestWrapper\HTTPRequest::class . '::GET - URL: ' . $requestUrl);
         $curlGETOptions = [
