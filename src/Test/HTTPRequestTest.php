@@ -1,16 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aportela\MediaWikiWrapper\Test;
 
-require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "autoload.php";
+require_once dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "autoload.php";
 
 #[\PHPUnit\Framework\Attributes\RequiresPhpExtension('curl')]
-class HTTPRequestTest extends \PHPUnit\Framework\TestCase
+final class HTTPRequestTest extends \PHPUnit\Framework\TestCase
 {
-    private const EXISTENT_URL = "https://raw.githubusercontent.com/aportela/httprequest-wrapper/main/src/HTTPRequest.php";
-    private const NON_EXISTENT_URL = "https://raw.githubusercontent.com/aportela/httprequest-wrapper/main/src/404_FILE_NOT_FOUND";
+    private const string EXISTENT_URL = "https://raw.githubusercontent.com/aportela/httprequest-wrapper/main/src/HTTPRequest.php";
+    
+    private const string NON_EXISTENT_URL = "https://raw.githubusercontent.com/aportela/httprequest-wrapper/main/src/404_FILE_NOT_FOUND";
 
-    protected static \Psr\Log\LoggerInterface $logger;
+    private static \Psr\Log\LoggerInterface $logger;
 
     /**
      * Called once just like normal constructor
@@ -24,14 +27,14 @@ class HTTPRequestTest extends \PHPUnit\Framework\TestCase
      * Initialize the test case
      * Called for every defined test
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
     }
 
     /**
      * Clean up the test case, called for every defined test
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
     }
 
@@ -44,43 +47,43 @@ class HTTPRequestTest extends \PHPUnit\Framework\TestCase
 
     public function testHeadPackagistUrl(): void
     {
-        $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
-        $response = $http->HEAD(self::EXISTENT_URL);
-        $this->assertEquals($response->code, 200);
-        $this->assertEquals($response->getContentType(), "text/plain; charset=utf-8");
-        $this->assertTrue($response->is(\aportela\HTTPRequestWrapper\ContentType::TEXT_PLAIN));
-        $this->assertEmpty($response->body);
+        $httpRequest = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
+        $httpResponse = $httpRequest->HEAD(self::EXISTENT_URL);
+        $this->assertEquals($httpResponse->code, 200);
+        $this->assertEquals($httpResponse->getContentType(), "text/plain; charset=utf-8");
+        $this->assertTrue($httpResponse->is(\aportela\HTTPRequestWrapper\ContentType::TEXT_PLAIN));
+        $this->assertEmpty($httpResponse->body);
     }
 
     public function testHeadNotFoundUrl(): void
     {
-        $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
-        $response = $http->HEAD(self::NON_EXISTENT_URL);
-        $this->assertEquals($response->code, 404);
+        $httpRequest = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
+        $httpResponse = $httpRequest->HEAD(self::NON_EXISTENT_URL);
+        $this->assertEquals($httpResponse->code, 404);
     }
 
     public function testGetPackagistUrl(): void
     {
-        $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
-        $response = $http->GET(self::EXISTENT_URL);
-        $this->assertEquals($response->code, 200);
-        $this->assertTrue($response->is(\aportela\HTTPRequestWrapper\ContentType::TEXT_PLAIN));
-        $this->assertNotEmpty($response->body);
-        $this->assertStringStartsWith("<?php", $response->body);
+        $httpRequest = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
+        $httpResponse = $httpRequest->GET(self::EXISTENT_URL);
+        $this->assertEquals($httpResponse->code, 200);
+        $this->assertTrue($httpResponse->is(\aportela\HTTPRequestWrapper\ContentType::TEXT_PLAIN));
+        $this->assertNotEmpty($httpResponse->body);
+        $this->assertStringStartsWith("<?php", $httpResponse->body);
     }
 
     public function testGetNotFoundUrl(): void
     {
-        $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
-        $response = $http->GET(self::NON_EXISTENT_URL);
-        $this->assertEquals($response->code, 404);
+        $httpRequest = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
+        $httpResponse = $httpRequest->GET(self::NON_EXISTENT_URL);
+        $this->assertEquals($httpResponse->code, 404);
     }
 
     public function testGetJsonContentTypeApi(): void
     {
-        $http = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
-        $response = $http->GET("https://myfakeapi.com/api/users/1");
-        $this->assertEquals($response->code, 200);
-        $this->assertTrue($response->is(\aportela\HTTPRequestWrapper\ContentType::JSON));
+        $httpRequest = new \aportela\HTTPRequestWrapper\HTTPRequest(self::$logger);
+        $httpResponse = $httpRequest->GET("https://myfakeapi.com/api/users/1");
+        $this->assertEquals($httpResponse->code, 200);
+        $this->assertTrue($httpResponse->is(\aportela\HTTPRequestWrapper\ContentType::JSON));
     }
 }

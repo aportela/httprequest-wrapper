@@ -1,29 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace aportela\HTTPRequestWrapper;
 
 class HTTPResponse
 {
-    public int $code = 0;
-    protected string $contentType = "";
-    /**
-     * @var array<string, string[]>
-     */
-    protected array $headers = array();
-    public ?string $body = null;
-
     /**
      * @param array<string, string[]> $headers
      */
-    public function __construct(int $code, string $contentType, array $headers = [], ?string $body = null)
-    {
-        $this->code = $code;
-        $this->contentType = $contentType;
-        $this->headers = $headers;
-        $this->body = $body;
-    }
-
-    public function __destruct()
+    public function __construct(public int $code, protected string $contentType, protected array $headers = [], public ?string $body = null)
     {
     }
 
