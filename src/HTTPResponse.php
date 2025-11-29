@@ -9,9 +9,7 @@ class HTTPResponse
     /**
      * @param array<string, string[]> $headers
      */
-    public function __construct(public int $code, protected string $contentType, protected array $headers = [], public ?string $body = null)
-    {
-    }
+    public function __construct(public int $code, protected string $contentType, protected array $headers = [], public ?string $body = null) {}
 
     public function getContentType(): string
     {

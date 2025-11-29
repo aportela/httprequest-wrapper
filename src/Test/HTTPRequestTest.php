@@ -27,23 +27,17 @@ final class HTTPRequestTest extends \PHPUnit\Framework\TestCase
      * Initialize the test case
      * Called for every defined test
      */
-    protected function setUp(): void
-    {
-    }
+    protected function setUp(): void {}
 
     /**
      * Clean up the test case, called for every defined test
      */
-    protected function tearDown(): void
-    {
-    }
+    protected function tearDown(): void {}
 
     /**
      * Clean up the whole test class
      */
-    public static function tearDownAfterClass(): void
-    {
-    }
+    public static function tearDownAfterClass(): void {}
 
     public function testHeadPackagistUrl(): void
     {

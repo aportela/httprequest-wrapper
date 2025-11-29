@@ -32,7 +32,7 @@ class HTTPRequest
         $this->commonCurlOptions = [
             CURLOPT_SSL_VERIFYHOST => 0,
             CURLOPT_SSL_VERIFYPEER => 0,
-            CURLOPT_TIMEOUT => 3
+            CURLOPT_TIMEOUT => 3,
         ];
         if (!in_array($userAgent, [null, '', '0'], true)) {
             $this->commonCurlOptions[CURLOPT_USERAGENT] = $userAgent;
@@ -183,7 +183,7 @@ class HTTPRequest
             CURLOPT_NOBODY => true,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_URL => $requestUrl
+            CURLOPT_URL => $requestUrl,
         ];
         $this->setHeaders($headers);
         $this->setReferer($referer);
@@ -205,7 +205,7 @@ class HTTPRequest
         $curlGETOptions = [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_URL => $requestUrl
+            CURLOPT_URL => $requestUrl,
         ];
         $this->setHeaders($headers);
         $this->setReferer($referer);
